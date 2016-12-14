@@ -8,16 +8,18 @@ public class NgsCharacterTesting {
 
 
 
-    @Parameterized.Parameters(name = "character: {0}")
+    @Parameterized.Parameters(name = "character: {0}, index: {1}")
         public static Iterable<Object[]> testData() {
         return DataСharacter.getCharacter();
     }
 
     private String character;
+    private String index;
 
 
-    public NgsCharacterTesting(String character) {
+    public NgsCharacterTesting(String character, String index) {
         this.character = character;
+        this.index = index;
 
     }
 
@@ -28,33 +30,43 @@ public class NgsCharacterTesting {
         Do.goToPage(Locators.getUrlProject());
 
     }
-/*
-    @Ignore
-    public void checkWithCharInProject() {
-        Do.clickTheButton(Locators.getNewprojectbutton());
-        Do.fillField(Locators.getProjectnamefiled(), character);
-        Do.clickTheButton(Locators.getCreateButton());
-        Do.fillField(Locators.getNamefield(), samplename);
-        Do.clickTheButton(Locators.getUploadbutton());
-        Do.uploadFile(Locators.getSelectfilebutton(), Locators.getFilelocation());
-        Do.clickTheButton(Locators.getStartuploadbutton());
-        Do.clickTheNotClikableButton(Locators.getSavebutton());
-        Do.clickTheButton(Locators.getStartanalysisbutton());
-        Do.clickTheButton(Locators.getChoseworkflowradio());
-        Do.clickTheNotClikableButton(Locators.getCreateanalysisbutton());
-        Do.clickTheButton(Locators.getRunanalysisbutton());
-        Assert.assertTrue(Do.complitedAnalysis());
+
+    @Test
+    public void checkCreateNewSampleWithBadChar() {
+        // must be created project with name "project"
+      Do.clickTheButton(Locators.getGotoproject());
+      Do.clickTheButton(Locators.getAddsamplebutton());
+      Do.fillField(Locators.getNamefield(), character);
+      Do.clickTheButton(Locators.getSavebutton());
+      Assert.assertTrue(Do.badSymbolsMessage());
+
     }
-*/
+
     @Test
     public void checkCreateNewProjectWithBadChar() {
         Do.clickTheButton(Locators.getNewprojectbutton());
         Do.fillField(Locators.getProjectnamefiled(), character);
         Do.clickTheButton(Locators.getCreateButton());
         Assert.assertTrue(Do.badSymbolsMessage());
-
-
     }
+
+
+    @Test
+    public void checkWithCharacterInGroupName() {
+        // must be created project with name "project"
+        Do.clickTheButton(Locators.getGotoproject());
+        Do.clickTheButton(Locators.getStartanalysisbutton());
+        Do.clickTheButton(Locators.getChoseworkflowradio());
+        Do.clickTheButton(Locators.getCreateanalysisbutton());
+        Do.clearField(Locators.getAnalysisnamefield());
+        Do.fillField(Locators.getAnalysisnamefield(), index);
+        Do.clearField(Locators.getGroupnamefield());
+        Do.fillField(Locators.getGroupnamefield() , character);
+        Do.clickTheButton(Locators.getRunanalysisbutton());
+        Assert.assertTrue(Do.badSymbolsMessage());
+    }
+
+
 
     @After
     public void goToStartPage() {
